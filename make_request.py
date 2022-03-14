@@ -4,7 +4,8 @@ from bs4 import BeautifulSoup
 from requests_testadapter import Resp
 import requests
 import os
-from processing_file import Processing
+from processing_fttx import Processing
+from processing_intra_city import Processing_intra_city
 
 class LocalFileAdapter(requests.adapters.HTTPAdapter):
     def build_response_from_file(self, request):
@@ -26,12 +27,21 @@ class LocalFileAdapter(requests.adapters.HTTPAdapter):
 requests_session = requests.session()
 requests_session.mount('file://', LocalFileAdapter())
 
-r=requests_session.get(r'file://'+r'C:\Users\parth.pandey\Desktop\Automation\Code\input\WCOs/630098168.html')  
+r=requests_session.get(r'file://'+r'C:\Users\parth.pandey\Desktop\Automation\Code\input\WCOs/630125209.html')  
 # Path to HTML file
 
 soup = BeautifulSoup(r.content, 'html.parser')
-module=Processing(soup)  #Processing of html to dataframe
+
+categ=input("WO Type Enter 1/2, 1- FTTx, 2-Intra City ")
+
+if categ=='1':
+    module=Processing(soup)  #Processing of html to dataframe
+elif categ=='2':
+    module=Processing_intra_city(soup)  #Processing of html to dataframe
+
+
+
 data_frame_from_scrape=module.make_df()
 
-data_frame_from_scrape.to_excel(r'C:\Users\parth.pandey\Desktop\Automation\Code\output\Scraping_HTML/630098168_17-11-2021.xlsx')
+data_frame_from_scrape.to_excel(r'C:\Users\parth.pandey\Desktop\Automation\Code\output\Scraping_HTML/630125209.xlsx')
 
